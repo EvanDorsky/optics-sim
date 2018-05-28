@@ -2,6 +2,7 @@
   "name": "optics-sim",
   "version": "1.0.0",
   "description": "Just rays and glass",
+  "repository": "git@github.com:EvanDorsky/optics-sim.git",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
