@@ -36,7 +36,7 @@ Ray.prototype.intersects = function(lens) {
     let yint = this.f(xint)
 
     this.ctx.moveTo(xint, yint)
-    this.ctx.lineTo(xint+500, -1/this.m*(xint+500)+bprime)
+    this.ctx.lineTo(lx, ly)
 
     this.ctx.beginFill(0x00ff00)
     this.ctx.drawCircle(xint, yint, 5)

@@ -26,8 +26,8 @@ const World = {
         let _ray = new Ray(this.ray_ctx)
         this.rays.push(_ray)
     },
-    addLens: function() {
-        let _lens = new Lens()
+    addLens: function(x, y) {
+        let _lens = new Lens(x, y)
         World.app.stage.addChild(_lens.ctx)
         this.lenses.push(_lens)
     }
@@ -39,7 +39,8 @@ $(document).ready(() => {
     World.init()
 
     World.addRay()
-    World.addLens()
+    World.addLens(400, 200)
+    World.addLens(300, 400)
 
     World.draw()
 })
