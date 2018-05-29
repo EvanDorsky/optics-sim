@@ -30,10 +30,22 @@ Ray.prototype.intersects = function(lens) {
     let ly = lens.ctx.y
     let lr = lens.r
 
-    let xmin = lx - lr
-    let xmax = lx + lr
-    let ymin = ly - lr
-    let ymax = ly + lr
+    let bprime = (1 / this.m)*lx + ly
 
-    return (this.f(lx) < ymax && this.f(lx) > ymin) || (this.f_inv(ly) < xmax && this.f(ly) > xmin)
+    let xint = (bprime - this.b) / (this.m + 1/this.m)
+    let yint = this.f(xint)
+
+    console.log('xint')
+    console.log(xint)
+    console.log('yint')
+    console.log(yint)
+
+    this.ctx.beginFill(0x00ff00)
+    this.ctx.drawCircle(xint, yint, 5)
+    this.ctx.endFill()
+
+    this.ctx.moveTo(xint, yint)
+    this.ctx.lineTo(xint+500, -1/this.m*(xint+500)+bprime)
+
+    return false
 }
