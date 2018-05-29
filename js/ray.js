@@ -6,11 +6,34 @@ function Ray(_ctx) {
 
     this.ctx.lineStyle(4, 0xffffff, 1)
 
-    this.m = -1
+    this.m = 1
     this.b = 0
+}
+
+Ray.prototype.f = function(x) {
+    let y = this.m * x + this.b
+    return y
+}
+
+Ray.prototype.f_inv = function(y) {
+    let x = (y - this.b) / this.m
+    return x
 }
 
 Ray.prototype.draw = function() {
     this.ctx.moveTo(0, 0)
-    this.ctx.lineTo(50, 50)
+    this.ctx.lineTo(500, this.m*500 + this.b)
+}
+
+Ray.prototype.intersects = function(lens) {
+    let lx = lens.ctx.x
+    let ly = lens.ctx.y
+    let lr = lens.r
+
+    let xmin = lx - lr
+    let xmax = lx + lr
+    let ymin = ly - lr
+    let ymax = ly + lr
+
+    return (this.f(lx) < ymax && this.f(lx) > ymin) || (this.f_inv(ly) < xmax && this.f(ly) > xmin)
 }

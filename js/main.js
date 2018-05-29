@@ -7,11 +7,19 @@ const World = {
         World.app.stage.addChild(this.ray_ctx)
     },
     draw: function() {
-        for (var i = this.rays.length - 1; i >= 0; i--) {
-            this.rays[i].draw()
-        }
+        this.drawRays()
         for (var i = this.lenses.length - 1; i >= 0; i--) {
             this.lenses[i].draw()
+        }
+    },
+    drawRays: function() {
+        for (var i = this.rays.length - 1; i >= 0; i--) {
+            this.rays[i].draw()
+            for (var j = this.lenses.length - 1; j >= 0; j--) {
+                if (this.rays[i].intersects(this.lenses[j])) {
+                    alert('intersection')
+                }
+            }
         }
     },
     addRay: function() {
@@ -29,8 +37,8 @@ $(document).ready(() => {
     document.body.appendChild(World.app.view)
 
     World.init()
-    World.addRay()
 
+    World.addRay()
     World.addLens()
 
     World.draw()
