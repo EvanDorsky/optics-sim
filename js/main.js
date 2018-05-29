@@ -25,8 +25,8 @@ const World = {
             }
         }
     },
-    addRay: function() {
-        let _ray = new Ray(this.ray_ctx)
+    addRay: function(m, b) {
+        let _ray = new Ray(this.ray_ctx, m, b)
         this.rays.push(_ray)
     },
     addLens: function(x, y) {
@@ -41,7 +41,8 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay()
+    World.addRay(1, 0)
+    World.addRay(2, 50)
     World.addLens(400, 200)
     World.addLens(300, 400)
     World.addLens(470, 400)

@@ -1,4 +1,4 @@
-function Ray(_ctx) {
+function Ray(_ctx, m, b) {
     this.ctx = _ctx
 
     this.ctx.x = 0
@@ -6,8 +6,8 @@ function Ray(_ctx) {
 
     this.ctx.lineStyle(2, 0xffffff, 1)
 
-    this.m = 1
-    this.b = 0
+    this.m = m
+    this.b = b
 }
 
 Ray.prototype.f = function(x) {
