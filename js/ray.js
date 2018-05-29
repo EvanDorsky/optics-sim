@@ -21,7 +21,7 @@ Ray.prototype.f_inv = function(y) {
 }
 
 Ray.prototype.draw = function() {
-    this.ctx.moveTo(0, 0)
+    this.ctx.moveTo(0, this.b)
     this.ctx.lineTo(500, this.m*500 + this.b)
 }
 
