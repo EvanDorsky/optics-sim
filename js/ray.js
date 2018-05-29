@@ -35,17 +35,12 @@ Ray.prototype.intersects = function(lens) {
     let xint = (bprime - this.b) / (this.m + 1/this.m)
     let yint = this.f(xint)
 
-    console.log('xint')
-    console.log(xint)
-    console.log('yint')
-    console.log(yint)
+    this.ctx.moveTo(xint, yint)
+    this.ctx.lineTo(xint+500, -1/this.m*(xint+500)+bprime)
 
     this.ctx.beginFill(0x00ff00)
     this.ctx.drawCircle(xint, yint, 5)
     this.ctx.endFill()
-
-    this.ctx.moveTo(xint, yint)
-    this.ctx.lineTo(xint+500, -1/this.m*(xint+500)+bprime)
 
     return false
 }
