@@ -25,7 +25,7 @@ const World = {
         this.drawRays()
     },
     drawRays: function() {
-        this.ray_ctx.clear()
+        this.ray_ctx.clear().lineStyle(2, 0xffffff, 1)
         for (var i = this.rays.length - 1; i >= 0; i--) {
             this.rays[i].draw()
             for (var j = this.lenses.length - 1; j >= 0; j--) {
