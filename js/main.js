@@ -42,7 +42,7 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(2, 0)
+    World.addRay(2, 10)
     World.addRay(.8, 0)
     World.addLens(200, 200)
     // World.addLens(300, 400)

@@ -57,7 +57,7 @@ Ray.prototype.intersectsAt = function(lens) {
 
     let A = 1 + m*m
     let B = 2*m*(b-k) - 2*h
-    let C = h*h + b*b + 2*b*k + k*k - r*r
+    let C = h*h + (b-k)*(b-k) - r*r
 
     let det = Math.sqrt(B*B - 4*A*C)
 
