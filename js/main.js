@@ -4,7 +4,16 @@ const World = {
     lenses: [],
     init: function() {
         this.ray_ctx = new PIXI.Graphics()
-        World.app.stage.addChild(this.ray_ctx)
+        this.app.stage.addChild(this.ray_ctx)
+
+        this.addLens(200, 200)
+
+        this.app.stage.interactive = true
+        this.app.stage.on("mousemove", (e) => {
+            this.lenses[0].ctx.x = e.data.global.x
+            this.lenses[0].ctx.y = e.data.global.y
+            this.drawRays()
+        })
     },
     draw: function() {
         for (var i = this.lenses.length - 1; i >= 0; i--) {
@@ -13,6 +22,7 @@ const World = {
         this.drawRays()
     },
     drawRays: function() {
+        this.ray_ctx.clear()
         for (var i = this.rays.length - 1; i >= 0; i--) {
             this.rays[i].draw()
             for (var j = this.lenses.length - 1; j >= 0; j--) {
@@ -43,10 +53,10 @@ $(document).ready(() => {
     World.init()
 
     World.addRay(2, 10)
-    World.addRay(.8, 0)
-    World.addLens(200, 200)
+    // World.addRay(.8, 0)
+    // World.addLens(200, 200)
     // World.addLens(300, 400)
-    World.addLens(200, 500)
+    // World.addLens(200, 500)
     // World.addLens(470, 400)
 
     World.draw()
