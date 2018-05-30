@@ -22,10 +22,10 @@ Lens.prototype.draw = function() {
     let ymin = -r
     let ymax =  r
 
-    this.ctx.beginFill(0xff0000)
-    this.ctx.drawCircle(xmin, 0, 5)
-    this.ctx.drawCircle(xmax, 0, 5)
-    this.ctx.drawCircle(0, ymin, 5)
-    this.ctx.drawCircle(0, ymax, 5)
-    this.ctx.endFill()
+    // this.ctx.beginFill(0xff0000)
+    // this.ctx.drawCircle(xmin, 0, 5)
+    // this.ctx.drawCircle(xmax, 0, 5)
+    // this.ctx.drawCircle(0, ymin, 5)
+    // this.ctx.drawCircle(0, ymax, 5)
+    // this.ctx.endFill()
 }

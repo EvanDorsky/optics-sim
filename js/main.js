@@ -21,6 +21,7 @@ const World = {
                     lens.ctx.beginFill(0x0000ff)
                     lens.ctx.drawCircle(0, 0, 5)
                     lens.ctx.endFill()
+                    this.rays[i].intersectsAt(lens)
                 }
             }
         }
@@ -41,11 +42,12 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(1, 0)
-    World.addRay(2, 50)
-    World.addLens(400, 200)
-    World.addLens(300, 400)
-    World.addLens(470, 400)
+    World.addRay(2, 0)
+    World.addRay(.8, 0)
+    World.addLens(200, 200)
+    // World.addLens(300, 400)
+    World.addLens(200, 500)
+    // World.addLens(470, 400)
 
     World.draw()
 })

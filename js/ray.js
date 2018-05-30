@@ -46,3 +46,28 @@ Ray.prototype.intersects = function(lens) {
     let dy = ly - yint
     return Math.sqrt(dx*dx + dy*dy) < lr
 }
+
+Ray.prototype.intersectsAt = function(lens) {
+    let h = lens.ctx.x
+    let k = lens.ctx.y
+    let r = lens.r
+
+    let m = this.m
+    let b = this.b
+
+    let A = 1 + m*m
+    let B = 2*m*(b-k) - 2*h
+    let C = h*h + b*b + 2*b*k + k*k - r*r
+
+    let det = Math.sqrt(B*B - 4*A*C)
+
+    let x1 = (-B + det)/(2*A)
+    let x2 = (-B - det)/(2*A)
+
+    this.ctx.beginFill(0xff00ff)
+    this.ctx.drawCircle(x1, this.f(x1), 5)
+    this.ctx.drawCircle(x2, this.f(x2), 5)
+    this.ctx.endFill()
+
+    // return
+}
