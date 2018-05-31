@@ -10,12 +10,12 @@ const World = {
 
         this.addLens(200, 200)
 
-        // setInterval(this.drawRays.bind(this), 1000/this.fps)
+        setInterval(this.drawRays.bind(this), 1000/this.fps)
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
             this.lenses[0].ctx.x = e.data.global.x
             this.lenses[0].ctx.y = e.data.global.y
-            this.drawRays()
+            // this.drawRays()
         })
     },
     draw: function() {
@@ -49,8 +49,8 @@ const World = {
             }
         }
     },
-    addRay: function(x, y, m) {
-        let _ray = new Ray(this.ray_ctx, new PIXI.Point(x, y), m)
+    addRay: function(x, y, theta) {
+        let _ray = new Ray(this.ray_ctx, new PIXI.Point(x, y), theta)
         this.rays.push(_ray)
     },
     addLens: function(x, y) {
@@ -65,12 +65,17 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(10, 100, 2)
-    // World.addRay(.8, 0)
-    // World.addLens(200, 200)
-    // World.addLens(300, 400)
-    // World.addLens(200, 500)
-    // World.addLens(470, 400)
+    World.addRay(0,  0, Math.PI/4)
+    World.addRay(0,  5, Math.PI/4)
+    World.addRay(0, 10, Math.PI/4)
+    World.addRay(0, 15, Math.PI/4)
+    World.addRay(0, 20, Math.PI/4)
+    World.addRay(0, 25, Math.PI/4)
+    World.addRay(0, 30, Math.PI/4)
+    World.addRay(0, 35, Math.PI/4)
+    World.addRay(0, 40, Math.PI/4)
+    World.addRay(0, 45, Math.PI/4)
+    World.addRay(200, 400, -Math.PI/5)
 
     World.draw()
 })

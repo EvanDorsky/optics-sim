@@ -1,28 +1,21 @@
-function Ray(_ctx, origin, m) {
+function Ray(_ctx, origin, theta) {
     this.ctx = _ctx
 
     this.ctx.lineStyle(2, 0xffffff, 1)
 
     this.origin = origin
-    this.theta = Math.atan(m) // <- this has to go
-
-    this.m = m
-    this.b = origin.y - m*origin.x
-}
-
-Ray.prototype.f = function(x) {
-    let y = this.m * x + this.b
-    return y
-}
-
-Ray.prototype.f_inv = function(y) {
-    let x = (y - this.b) / this.m
-    return x
+    this.theta = theta
 }
 
 Ray.prototype.draw = function() {
     this.ctx.moveTo(this.origin.x, this.origin.y)
-    this.ctx.lineTo(500, this.m*500 + this.b)
+
+    let endPoint = (new PIXI.Point(1, 0))
+        .rotate(this.theta)
+        .mult(1000)
+        .add(this.origin)
+        
+    this.ctx.lineTo(endPoint.x, endPoint.y)
 }
 
 var PointRotate = function(theta) {
