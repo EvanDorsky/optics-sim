@@ -1,13 +1,13 @@
-function Ray(_ctx, m, b) {
+function Ray(_ctx, origin, m) {
     this.ctx = _ctx
-
-    this.ctx.x = 0
-    this.ctx.y = 0
 
     this.ctx.lineStyle(2, 0xffffff, 1)
 
+    this.origin = origin
+    this.theta = Math.atan(m) // <- this has to go
+
     this.m = m
-    this.b = b
+    this.b = origin.y - m*origin.x
 }
 
 Ray.prototype.f = function(x) {
@@ -21,7 +21,7 @@ Ray.prototype.f_inv = function(y) {
 }
 
 Ray.prototype.draw = function() {
-    this.ctx.moveTo(0, this.b)
+    this.ctx.moveTo(this.origin.x, this.origin.y)
     this.ctx.lineTo(500, this.m*500 + this.b)
 }
 
@@ -30,21 +30,13 @@ Ray.prototype.intersects = function(lens) {
     let ly = lens.ctx.y
     let lr = lens.r
 
-    let bprime = (1 / this.m)*lx + ly
+    let xrot = lx*Math.cos(-this.theta) - ly*Math.sin(-this.theta)
+    let yrot = ly*Math.cos(-this.theta) + lx*Math.sin(-this.theta)
 
-    let xint = (bprime - this.b) / (this.m + 1/this.m)
-    let yint = this.f(xint)
-
-    this.ctx.moveTo(xint, yint)
-    this.ctx.lineTo(lx, ly)
-
-    this.ctx.beginFill(0x00ff00)
-    this.ctx.drawCircle(xint, yint, 5)
+    this.ctx.drawCircle(xrot, yrot, 5)
     this.ctx.endFill()
 
-    let dx = lx - xint
-    let dy = ly - yint
-    return Math.sqrt(dx*dx + dy*dy) < lr
+    return Math.abs(yrot) < lr
 }
 
 Ray.prototype.intersectsAt = function(lens) {
@@ -69,5 +61,5 @@ Ray.prototype.intersectsAt = function(lens) {
     this.ctx.drawCircle(x2, this.f(x2), 5)
     this.ctx.endFill()
 
-    // return
+    return [new PIXI.Point(x1, this.f(x1)), new PIXI.Point(x2, this.f(x2))]
 }

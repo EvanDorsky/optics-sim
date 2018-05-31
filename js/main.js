@@ -15,7 +15,6 @@ const World = {
         this.app.stage.on("mousemove", (e) => {
             this.lenses[0].ctx.x = e.data.global.x
             this.lenses[0].ctx.y = e.data.global.y
-            // this.drawRays()
         })
     },
     draw: function() {
@@ -32,15 +31,20 @@ const World = {
                 let lens = this.lenses[j]
                 if (this.rays[i].intersects(lens)) {
                     lens.ctx.beginFill(0x0000ff)
-                    lens.ctx.drawCircle(0, 0, 5)
+                    lens.ctx.drawCircle(0, 0, 15)
                     lens.ctx.endFill()
                     this.rays[i].intersectsAt(lens)
+                }
+                else {
+                    lens.ctx.beginFill(0xffffff)
+                    lens.ctx.drawCircle(0, 0, 15)
+                    lens.ctx.endFill()
                 }
             }
         }
     },
-    addRay: function(m, b) {
-        let _ray = new Ray(this.ray_ctx, m, b)
+    addRay: function(x, y, m) {
+        let _ray = new Ray(this.ray_ctx, new PIXI.Point(x, y), m)
         this.rays.push(_ray)
     },
     addLens: function(x, y) {
@@ -55,7 +59,7 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(2, 10)
+    World.addRay(0, 0, 2)
     // World.addRay(.8, 0)
     // World.addLens(200, 200)
     // World.addLens(300, 400)
