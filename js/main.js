@@ -10,11 +10,12 @@ const World = {
 
         this.addLens(200, 200)
 
-        setInterval(this.drawRays.bind(this), 1000/this.fps)
+        // setInterval(this.drawRays.bind(this), 1000/this.fps)
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
             this.lenses[0].ctx.x = e.data.global.x
             this.lenses[0].ctx.y = e.data.global.y
+            this.drawRays()
         })
     },
     draw: function() {
@@ -29,11 +30,16 @@ const World = {
             this.rays[i].draw()
             for (var j = this.lenses.length - 1; j >= 0; j--) {
                 let lens = this.lenses[j]
-                if (this.rays[i].intersects(lens)) {
+                let ints = this.rays[i].intersects(lens)
+                if (ints) {
                     lens.ctx.beginFill(0x0000ff)
                     lens.ctx.drawCircle(0, 0, 15)
                     lens.ctx.endFill()
-                    this.rays[i].intersectsAt(lens)
+
+                    this.ray_ctx.beginFill(0xff00ff)
+                    this.ray_ctx.drawCircle(ints[0].x, ints[0].y, 5)
+                    this.ray_ctx.drawCircle(ints[1].x, ints[1].y, 5)
+                    this.ray_ctx.endFill()
                 }
                 else {
                     lens.ctx.beginFill(0xffffff)

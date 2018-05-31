@@ -25,41 +25,62 @@ Ray.prototype.draw = function() {
     this.ctx.lineTo(500, this.m*500 + this.b)
 }
 
-Ray.prototype.intersects = function(lens) {
-    let lx = lens.ctx.x-this.origin.x
-    let ly = lens.ctx.y-this.origin.y
-    let lr = lens.r
+var PointRotate = function(theta) {
+    let xtemp = this.x
+    let costheta = Math.cos(theta)
+    let sintheta = Math.sin(theta)
 
-    let xrot = lx*Math.cos(-this.theta) - ly*Math.sin(-this.theta)
-    let yrot = ly*Math.cos(-this.theta) + lx*Math.sin(-this.theta)
+    this.x = this.x*costheta - this.y*sintheta
+    this.y = this.y*costheta + xtemp*sintheta
 
-    this.ctx.drawCircle(xrot, yrot, 5)
-    this.ctx.endFill()
-
-    return Math.abs(yrot) < lr
+    return this
 }
+PIXI.Point.prototype.rotate = PointRotate
+PIXI.ObservablePoint.prototype.rotate = PointRotate
 
-Ray.prototype.intersectsAt = function(lens) {
-    let h = lens.ctx.x
-    let k = lens.ctx.y
-    let r = lens.r
+var PointAdd = function(p) {
+    this.x += p.x
+    this.y += p.y
 
-    let m = this.m
-    let b = this.b
+    return this
+}
+PIXI.Point.prototype.add = PointAdd
+PIXI.ObservablePoint.prototype.add = PointAdd
 
-    let A = 1 + m*m
-    let B = 2*m*(b-k) - 2*h
-    let C = h*h + (b-k)*(b-k) - r*r
+var PointMult = function(g) {
+    this.x *= g
+    this.y *= g
 
-    let det = Math.sqrt(B*B - 4*A*C)
+    return this
+}
+PIXI.Point.prototype.mult = PointMult
+PIXI.ObservablePoint.prototype.mult = PointMult
 
-    let x1 = (-B + det)/(2*A)
-    let x2 = (-B - det)/(2*A)
+// composition is fun??? (I think this is pretty nifty)
+var PointAs = function() {
+    let copy = new PIXI.Point()
+    copy.copy(this)
 
-    this.ctx.beginFill(0xff00ff)
-    this.ctx.drawCircle(x1, this.f(x1), 5)
-    this.ctx.drawCircle(x2, this.f(x2), 5)
-    this.ctx.endFill()
+    return copy
+}
+PIXI.Point.prototype.as = PointAs
+PIXI.ObservablePoint.prototype.as = PointAs
 
-    return [new PIXI.Point(x1, this.f(x1)), new PIXI.Point(x2, this.f(x2))]
+Ray.prototype.intersects = function(lens) {
+    let lens_pos = lens.ctx.position.as().add(this.origin.as().mult(-1))
+
+    let d = lens_pos.rotate(-this.theta).y
+
+    if (Math.abs(d) < lens.r) {
+        let chord_half = Math.sqrt(lens.r*lens.r - d*d)
+
+        return [
+            (new PIXI.Point(lens_pos.x + chord_half, 0))
+                .rotate(this.theta)
+                .add(this.origin),
+            (new PIXI.Point(lens_pos.x - chord_half, 0))
+                .rotate(this.theta)
+                .add(this.origin)
+        ]
+    }
 }
