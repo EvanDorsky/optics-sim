@@ -59,7 +59,7 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(0, 0, 2)
+    World.addRay(10, 100, 2)
     // World.addRay(.8, 0)
     // World.addLens(200, 200)
     // World.addLens(300, 400)

@@ -26,8 +26,8 @@ Ray.prototype.draw = function() {
 }
 
 Ray.prototype.intersects = function(lens) {
-    let lx = lens.ctx.x
-    let ly = lens.ctx.y
+    let lx = lens.ctx.x-this.origin.x
+    let ly = lens.ctx.y-this.origin.y
     let lr = lens.r
 
     let xrot = lx*Math.cos(-this.theta) - ly*Math.sin(-this.theta)
