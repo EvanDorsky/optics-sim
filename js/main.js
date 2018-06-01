@@ -31,6 +31,8 @@ const World = {
             for (var j = this.lenses.length - 1; j >= 0; j--) {
                 let lens = this.lenses[j]
                 let ints = this.rays[i].intersects(lens)
+                lens.ctx.clear()
+                lens.draw()
                 if (ints) {
                     lens.ctx.beginFill(0x0000ff)
                     lens.ctx.drawCircle(0, 0, 15)
