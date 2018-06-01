@@ -8,36 +8,41 @@ function Ray(_ctx, origin, theta) {
 }
 
 Ray.prototype.draw = function(lenses) {
-    this.drawSegment(this.origin, this.theta, lenses)
+    this.drawSegment(this.origin, this.theta, lenses, 4)
 }
 
-Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses) {
+Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
-        let int = this.intersects(lens)
+        let int = this.intersects(segOrigin, segTheta, lens)
         if (int) {
             this.ctx.beginFill(0xff00ff)
             this.ctx.drawCircle(int.x, int.y, 5)
             this.ctx.endFill()
 
-            this.ctx.moveTo(this.origin.x, this.origin.y)
+            this.ctx.moveTo(segOrigin.x, segOrigin.y)
             this.ctx.lineTo(int.x, int.y)
+
+            raysLeft--
+            if (raysLeft) {
+                this.drawSegment(int, segTheta+0.3, lenses, raysLeft)
+            }
         } else {
             let endPoint = (new PIXI.Point(1, 0))
-                .rotate(this.theta)
+                .rotate(segTheta)
                 .mult(1000)
-                .add(this.origin)
+                .add(segOrigin)
                 
-            this.ctx.moveTo(this.origin.x, this.origin.y)
+            this.ctx.moveTo(segOrigin.x, segOrigin.y)
             this.ctx.lineTo(endPoint.x, endPoint.y)
         }
     }
 }
 
-Ray.prototype.intersects = function(lens) {
-    let lens_pos = lens.ctx.position.as().add(this.origin.as().mult(-1))
+Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
+    let lens_pos = lens.ctx.position.as().add(segOrigin.as().mult(-1))
 
-    let d = lens_pos.rotate(-this.theta).y
+    let d = lens_pos.rotate(-segTheta).y
 
     if (Math.abs(d) < lens.r) {
         let chord_half = Math.sqrt(lens.r*lens.r - d*d)
@@ -45,11 +50,11 @@ Ray.prototype.intersects = function(lens) {
         let xs = [lens_pos.x - chord_half, lens_pos.x + chord_half]
         let ints = [
             (new PIXI.Point(xs[0], 0))
-                .rotate(this.theta)
-                .add(this.origin),
+                .rotate(segTheta)
+                .add(segOrigin),
             (new PIXI.Point(xs[1], 0))
-                .rotate(this.theta)
-                .add(this.origin)
+                .rotate(segTheta)
+                .add(segOrigin)
         ]
 
         if (xs[0] >= 0)

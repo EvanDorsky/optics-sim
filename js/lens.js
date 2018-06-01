@@ -6,6 +6,7 @@ function Lens(x, y) {
     this.r = 50
 
     this.ctx.beginFill(0xffffff)
+    this.ctx.alpha = 0.2
 }
 
 Lens.prototype.draw = function() {
