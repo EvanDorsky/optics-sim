@@ -12,6 +12,12 @@ Ray.prototype.draw = function(lenses) {
 }
 
 Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
+    // console.log('draw one segment')
+    // console.log('segOrigin')
+    // console.log(segOrigin)
+    this.ctx.beginFill(0xff0000)
+    this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
+    this.ctx.endFill()
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
         let int = this.intersects(segOrigin, segTheta, lens)
@@ -25,7 +31,7 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
 
             raysLeft--
             if (raysLeft) {
-                this.drawSegment(int, segTheta+0.3, lenses, raysLeft)
+                this.drawSegment(int, segTheta+0.5, lenses, raysLeft)
             }
         } else {
             let endPoint = (new PIXI.Point(1, 0))
@@ -39,6 +45,7 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
     }
 }
 
+// this checking breaks when the ray is inside the sphere
 Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
     let lens_pos = lens.ctx.position.as().add(segOrigin.as().mult(-1))
 
@@ -57,10 +64,16 @@ Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
                 .add(segOrigin)
         ]
 
-        if (xs[0] >= 0)
-            return ints[0]
-        else if (xs[1] >= 0)
+        if (ints[0].equals(segOrigin))
             return ints[1]
+        else if (ints[1].equals(segOrigin))
+            return ints[0]
+        else {
+            if (xs[0] > 0)
+                return ints[0]
+            else if (xs[1] > 0)
+                return ints[1]
+        }
     } else
         return null
 }

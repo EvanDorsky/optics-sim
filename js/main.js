@@ -42,14 +42,14 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(300, 300, 0*Math.PI/4)
-    World.addRay(300, 300, 1*Math.PI/4)
-    World.addRay(300, 300, 2*Math.PI/4)
-    World.addRay(300, 300, 3*Math.PI/4)
-    World.addRay(300, 300, 4*Math.PI/4)
+    // World.addRay(300, 300, 0*Math.PI/4)
+    // World.addRay(300, 300, 1*Math.PI/4)
+    // World.addRay(300, 300, 2*Math.PI/4)
+    // World.addRay(300, 300, 3*Math.PI/4)
+    // World.addRay(300, 300, 4*Math.PI/4)
     World.addRay(300, 300, 5*Math.PI/4)
-    World.addRay(300, 300, 6*Math.PI/4)
-    World.addRay(300, 300, 7*Math.PI/4)
+    // World.addRay(300, 300, 6*Math.PI/4)
+    // World.addRay(300, 300, 7*Math.PI/4)
 
     World.draw()
 })
