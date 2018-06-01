@@ -13,8 +13,6 @@ Lens.prototype.draw = function() {
     this.ctx.drawCircle(0, 0, this.r)
     this.ctx.endFill()
 
-    World.app.stage.addChild(this.ctx)
-
     let r = this.r
 
     let xmin = -r
