@@ -24,19 +24,7 @@ const World = {
     drawRays: function() {
         this.ray_ctx.clear().lineStyle(2, 0xffffff, 1)
         for (var i = this.rays.length - 1; i >= 0; i--) {
-            this.rays[i].draw()
-            for (var j = this.lenses.length - 1; j >= 0; j--) {
-                let lens = this.lenses[j]
-                let ints = this.rays[i].intersects(lens)
-                lens.ctx.clear()
-                lens.draw()
-                if (ints) {
-                    this.ray_ctx.beginFill(0xff00ff)
-                    this.ray_ctx.drawCircle(ints[0].x, ints[0].y, 5)
-                    this.ray_ctx.drawCircle(ints[1].x, ints[1].y, 5)
-                    this.ray_ctx.endFill()
-                }
-            }
+            this.rays[i].draw(this.lenses)
         }
     },
     addRay: function(x, y, theta) {
