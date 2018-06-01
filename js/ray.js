@@ -17,11 +17,9 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses) {
         let int = this.intersects(lens)
         if (int) {
             this.ctx.beginFill(0xff00ff)
-            this.ctx.drawCircle(int.x, int.y, 2)
+            this.ctx.drawCircle(int.x, int.y, 5)
             this.ctx.endFill()
 
-            console.log('int')
-            console.log(int)
             this.ctx.moveTo(this.origin.x, this.origin.y)
             this.ctx.lineTo(int.x, int.y)
         } else {
@@ -44,10 +42,22 @@ Ray.prototype.intersects = function(lens) {
     if (Math.abs(d) < lens.r) {
         let chord_half = Math.sqrt(lens.r*lens.r - d*d)
 
-        return (new PIXI.Point(lens_pos.x - chord_half, 0))
+        let xs = [lens_pos.x - chord_half, lens_pos.x + chord_half]
+        let ints = [
+            (new PIXI.Point(xs[0], 0))
+                .rotate(this.theta)
+                .add(this.origin),
+            (new PIXI.Point(xs[1], 0))
                 .rotate(this.theta)
                 .add(this.origin)
-    }
+        ]
+
+        if (xs[0] >= 0)
+            return ints[0]
+        else if (xs[1] >= 0)
+            return ints[1]
+    } else
+        return null
 }
 
 var PointRotate = function(theta) {

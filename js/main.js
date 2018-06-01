@@ -23,9 +23,8 @@ const World = {
     },
     drawRays: function() {
         this.ray_ctx.clear().lineStyle(2, 0xffffff, 1)
-        for (var i = this.rays.length - 1; i >= 0; i--) {
+        for (var i = this.rays.length - 1; i >= 0; i--)
             this.rays[i].draw(this.lenses)
-        }
     },
     addRay: function(x, y, theta) {
         let _ray = new Ray(this.ray_ctx, new PIXI.Point(x, y), theta)
@@ -43,8 +42,14 @@ $(document).ready(() => {
 
     World.init()
 
-    for (var i = 0; i < 100; i++)
-        World.addRay(50,  5*i, Math.PI/4)
+    World.addRay(300, 300, 0*Math.PI/4)
+    World.addRay(300, 300, 1*Math.PI/4)
+    World.addRay(300, 300, 2*Math.PI/4)
+    World.addRay(300, 300, 3*Math.PI/4)
+    World.addRay(300, 300, 4*Math.PI/4)
+    World.addRay(300, 300, 5*Math.PI/4)
+    World.addRay(300, 300, 6*Math.PI/4)
+    World.addRay(300, 300, 7*Math.PI/4)
 
     World.draw()
 })
