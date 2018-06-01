@@ -31,19 +31,10 @@ const World = {
                 lens.ctx.clear()
                 lens.draw()
                 if (ints) {
-                    lens.ctx.beginFill(0x0000ff)
-                    lens.ctx.drawCircle(0, 0, 15)
-                    lens.ctx.endFill()
-
                     this.ray_ctx.beginFill(0xff00ff)
                     this.ray_ctx.drawCircle(ints[0].x, ints[0].y, 5)
                     this.ray_ctx.drawCircle(ints[1].x, ints[1].y, 5)
                     this.ray_ctx.endFill()
-                }
-                else {
-                    lens.ctx.beginFill(0xffffff)
-                    lens.ctx.drawCircle(0, 0, 15)
-                    lens.ctx.endFill()
                 }
             }
         }
@@ -64,17 +55,8 @@ $(document).ready(() => {
 
     World.init()
 
-    World.addRay(0,  0, Math.PI/4)
-    World.addRay(0,  5, Math.PI/4)
-    World.addRay(0, 10, Math.PI/4)
-    World.addRay(0, 15, Math.PI/4)
-    World.addRay(0, 20, Math.PI/4)
-    World.addRay(0, 25, Math.PI/4)
-    World.addRay(0, 30, Math.PI/4)
-    World.addRay(0, 35, Math.PI/4)
-    World.addRay(0, 40, Math.PI/4)
-    World.addRay(0, 45, Math.PI/4)
-    World.addRay(200, 400, -Math.PI/5)
+    for (var i = 0; i < 100; i++)
+        World.addRay(50,  5*i, Math.PI/4)
 
     World.draw()
 })
