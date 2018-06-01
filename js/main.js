@@ -6,16 +6,13 @@ const World = {
         this.ray_ctx = new PIXI.Graphics()
         this.app.stage.addChild(this.ray_ctx)
 
-        this.fps = 60.0
-
         this.addLens(200, 200)
 
-        setInterval(this.drawRays.bind(this), 1000/this.fps)
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
             this.lenses[0].ctx.x = e.data.global.x
             this.lenses[0].ctx.y = e.data.global.y
-            // this.drawRays()
+            this.drawRays()
         })
     },
     draw: function() {
