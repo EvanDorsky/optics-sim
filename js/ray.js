@@ -8,7 +8,7 @@ function Ray(_ctx, origin, theta) {
 }
 
 Ray.prototype.draw = function(lenses) {
-    this.drawSegment(this.origin, this.theta, lenses, 2, 0)
+    this.drawSegment(this.origin, this.theta, lenses, 3, 0)
 }
 
 Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segsDrawn) {
@@ -18,6 +18,7 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segs
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
         let int_ret = this.intersects(segOrigin, segTheta, segsDrawn, lens)
+        // TODO: give line segment "medium" (material it's in)
 
         if (int_ret) {
             let int = int_ret[0]
@@ -64,21 +65,22 @@ Ray.prototype.intersects = function(segOrigin, segTheta, segNo, lens) {
         ]
 
         let int = null
-        if (segNo == 0 && xs[0] > 0)
+        if (segNo == 0 && xs[0] > 0) {
             int = ints[0]
-        else if (xs[1] > 0)
+            var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
+            var refraction_angle = (1 - 1/lens.n)*corner_angle
+        }
+        else if (xs[1] > 0) {
             int = ints[1]
-
-        // let corner_angle = Math.PI/4 - Math.asin(d/lens.r)
-        let corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
-        console.log('b = '+chord_half+' r = '+lens.r)
-        console.log('corner_angle')
-        console.log(corner_angle)
-        let refraction_angle = (1 - 1/lens.n)*corner_angle
+            var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
+            var refraction_angle = (1 - 1/lens.n)*corner_angle
+        }
+        else {
+            return null
+        }
 
         return [int, refraction_angle+segTheta]
     } else {
-        console.log('do we go here or die')
         return null
     }
 }
