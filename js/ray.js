@@ -8,31 +8,30 @@ function Ray(_ctx, origin, theta) {
 }
 
 Ray.prototype.draw = function(lenses) {
-    this.drawSegment(this.origin, this.theta, lenses, 4)
+    this.drawSegment(this.origin, this.theta, lenses, 4, 0)
 }
 
-Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
-    // console.log('draw one segment')
-    // console.log('segOrigin')
-    // console.log(segOrigin)
+Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segsDrawn) {
     this.ctx.beginFill(0xff0000)
     this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
     this.ctx.endFill()
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
-        let int = this.intersects(segOrigin, segTheta, lens)
-        if (int) {
-            this.ctx.beginFill(0xff00ff)
-            this.ctx.drawCircle(int.x, int.y, 5)
-            this.ctx.endFill()
+        let int_ret = this.intersects(segOrigin, segTheta, segsDrawn === 0, lens)
+
+        if (int_ret) {
+            let int = int_ret[0]
+            // this.ctx.beginFill(0xff00ff)
+            // this.ctx.drawCircle(int.x, int.y, 5)
+            // this.ctx.endFill()
 
             this.ctx.moveTo(segOrigin.x, segOrigin.y)
             this.ctx.lineTo(int.x, int.y)
 
-            raysLeft--
-            if (raysLeft) {
-                this.drawSegment(int, segTheta+0.5, lenses, raysLeft)
-            }
+            segsLeft--
+            segsDrawn++
+            if (segsLeft)
+                this.drawSegment(int, int_ret[1], lenses, segsLeft, segsDrawn)
         } else {
             let endPoint = (new PIXI.Point(1, 0))
                 .rotate(segTheta)
@@ -46,7 +45,7 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, raysLeft) {
 }
 
 // this checking breaks when the ray is inside the sphere
-Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
+Ray.prototype.intersects = function(segOrigin, segTheta, firstSeg, lens) {
     let lens_pos = lens.ctx.position.as().add(segOrigin.as().mult(-1))
 
     let d = lens_pos.rotate(-segTheta).y
@@ -64,16 +63,17 @@ Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
                 .add(segOrigin)
         ]
 
-        if (ints[0].equals(segOrigin))
-            return ints[1]
-        else if (ints[1].equals(segOrigin))
-            return ints[0]
-        else {
-            if (xs[0] > 0)
-                return ints[0]
-            else if (xs[1] > 0)
-                return ints[1]
-        }
+        let int = null
+        if (firstSeg && xs[0] > 0)
+            int = ints[0]
+        else if (xs[1] > 0)
+            int = ints[1]
+
+        let n2 = 1.52
+        let corner_angle = Math.PI/4 - Math.asin(d/lens.r)
+        let refraction_angle = (1 - 1/n2)*corner_angle
+
+        return [int, refraction_angle+segTheta]
     } else
         return null
 }

@@ -4,6 +4,8 @@ const World = {
     lenses: [],
     init: function() {
         this.ray_ctx = new PIXI.Graphics()
+        this.app.stage.pivot.y = 1
+        this.app.stage.scale.y *= -1
         this.app.stage.addChild(this.ray_ctx)
 
         this.addLens(200, 200)
@@ -11,7 +13,7 @@ const World = {
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
             this.lenses[0].ctx.x = e.data.global.x
-            this.lenses[0].ctx.y = e.data.global.y
+            this.lenses[0].ctx.y = -e.data.global.y
             this.drawRays()
         })
     },
@@ -42,14 +44,10 @@ $(document).ready(() => {
 
     World.init()
 
-    // World.addRay(300, 300, 0*Math.PI/4)
-    // World.addRay(300, 300, 1*Math.PI/4)
-    // World.addRay(300, 300, 2*Math.PI/4)
-    // World.addRay(300, 300, 3*Math.PI/4)
-    // World.addRay(300, 300, 4*Math.PI/4)
-    World.addRay(300, 300, 5*Math.PI/4)
-    // World.addRay(300, 300, 6*Math.PI/4)
-    // World.addRay(300, 300, 7*Math.PI/4)
+    // World.addRay(100, 100, 7.5*Math.PI/4)
+    World.addRay(100, -500, Math.PI/6)
+    // World.addRay(-100, 100, 7.5*Math.PI/4)
+    // World.addRay(-100, -100, 7.5*Math.PI/4)
 
     World.draw()
 })
