@@ -8,16 +8,16 @@ function Ray(_ctx, origin, theta) {
 }
 
 Ray.prototype.draw = function(lenses) {
-    this.drawSegment(this.origin, this.theta, lenses, 4, 0)
+    this.drawSegment(this.origin, this.theta, lenses, 2, 0)
 }
 
 Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segsDrawn) {
-    this.ctx.beginFill(0xff0000)
-    this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
-    this.ctx.endFill()
+    // this.ctx.beginFill(0xff0000)
+    // this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
+    // this.ctx.endFill()
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
-        let int_ret = this.intersects(segOrigin, segTheta, segsDrawn === 0, lens)
+        let int_ret = this.intersects(segOrigin, segTheta, segsDrawn, lens)
 
         if (int_ret) {
             let int = int_ret[0]
@@ -45,7 +45,7 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segs
 }
 
 // this checking breaks when the ray is inside the sphere
-Ray.prototype.intersects = function(segOrigin, segTheta, firstSeg, lens) {
+Ray.prototype.intersects = function(segOrigin, segTheta, segNo, lens) {
     let lens_pos = lens.ctx.position.as().add(segOrigin.as().mult(-1))
 
     let d = lens_pos.rotate(-segTheta).y
@@ -64,18 +64,23 @@ Ray.prototype.intersects = function(segOrigin, segTheta, firstSeg, lens) {
         ]
 
         let int = null
-        if (firstSeg && xs[0] > 0)
+        if (segNo == 0 && xs[0] > 0)
             int = ints[0]
         else if (xs[1] > 0)
             int = ints[1]
 
-        let n2 = 1.52
-        let corner_angle = Math.PI/4 - Math.asin(d/lens.r)
-        let refraction_angle = (1 - 1/n2)*corner_angle
+        // let corner_angle = Math.PI/4 - Math.asin(d/lens.r)
+        let corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
+        console.log('b = '+chord_half+' r = '+lens.r)
+        console.log('corner_angle')
+        console.log(corner_angle)
+        let refraction_angle = (1 - 1/lens.n)*corner_angle
 
         return [int, refraction_angle+segTheta]
-    } else
+    } else {
+        console.log('do we go here or die')
         return null
+    }
 }
 
 var PointRotate = function(theta) {
