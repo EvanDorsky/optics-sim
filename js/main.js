@@ -8,8 +8,8 @@ const World = {
         this.app.stage.scale.y *= -1
         this.app.stage.addChild(this.ray_ctx)
 
-        this.addLens(200, 200)
-        this.addLens(201, -250)
+        this.addLens(200, 200, 50)
+        this.addLens(220, -400, 100)
 
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
@@ -33,15 +33,15 @@ const World = {
         let _ray = new Ray(this.ray_ctx, new PIXI.Point(x, y), theta)
         this.rays.push(_ray)
     },
-    addLens: function(x, y) {
-        let _lens = new Lens(x, y)
-        World.app.stage.addChild(_lens.ctx)
-        this.lenses.push(_lens)
+    addLens: function(x, y, r) {
+        let lens = new Lens(x, y, r)
+        World.app.stage.addChild(lens.ctx)
+        this.lenses.push(lens)
     }
 }
 
 function addBeam() {
-    for (var y = -200; y > -450; y-=1)
+    for (var y = -350; y > -450; y-=1)
         World.addRay(100, y, 0)
 }
 

@@ -1,9 +1,9 @@
-function Lens(x, y) {
+function Lens(x, y, r) {
     this.ctx = new PIXI.Graphics()
 
     this.ctx.x = x
     this.ctx.y = y
-    this.r = 100
+    this.r = r
     this.n = 1.52
 
     this.ctx.beginFill(0xffffff)

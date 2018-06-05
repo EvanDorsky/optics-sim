@@ -23,54 +23,37 @@ Ray.prototype.draw = function(lenses) {
 }
 
 Ray.prototype.debugClear = function() {
-    // this.debug.text = ""
+    this.debug.text = ""
 }
 
 Ray.prototype.debugAddLine = function(line) {
-    // this.debug.text += line+'\n'
+    this.debug.text += line+'\n'
 }
 
 Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsDrawn) {
-    // this.ctx.beginFill(0xff0000)
-    // this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
-    // this.ctx.endFill()
     segsDrawn++
-    this.debugAddLine('==== New segment ====')
-    this.debugAddLine('    segsDrawn:'+segsDrawn)
 
-    // this will only work if there's just one lens
     let ints = []
     for (var i = lenses.length - 1; i >= 0; i--)
         ints.push(this.intersects(segOrigin, segTheta, lenses[i]))
         // TODO: give line segment "medium" (material it's in)
-    // find all intersections
-    // find the closest one
     let xmin = -1
     let int_ret = null
-    for (var i = ints.length - 1; i >= 0; i--) {
-        if (ints[i]) {
+    for (var i = ints.length - 1; i >= 0; i--)
+        if (ints[i])
             if (xmin == -1 || xmin > ints[i][2]) {
                 xmin = ints[i][2]
                 int_ret = ints[i]
             }
-        }
-    }
 
     if (int_ret) {
         let int = int_ret[0]
-        // console.log('int')
-        // console.log(int)
-        // this.ctx.beginFill(0xff00ff)
-        // this.ctx.drawCircle(int.x, int.y, 5)
-        // this.ctx.endFill()
 
         this.ctx.moveTo(segOrigin.x, segOrigin.y)
         this.ctx.lineTo(int.x, int.y)
-        this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to ('+(int.x|0)+', '+(int.y|0)+')')
 
-        if (segsDrawn < this.maxSegs) {
+        if (segsDrawn < this.maxSegs)
             this.drawSegment(int, int_ret[1], lenses, segsDrawn)
-        }
     } else {
         let endPoint = (new PIXI.Point(1, 0))
             .rotate(segTheta)
@@ -79,7 +62,6 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsDrawn) {
             
         this.ctx.moveTo(segOrigin.x, segOrigin.y)
         this.ctx.lineTo(endPoint.x, endPoint.y)
-        this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to (inf, inf)')
     }
 }
 
