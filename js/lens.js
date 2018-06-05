@@ -3,7 +3,7 @@ function Lens(x, y) {
 
     this.ctx.x = x
     this.ctx.y = y
-    this.r = 150
+    this.r = 100
     this.n = 1.52
 
     this.ctx.beginFill(0xffffff)

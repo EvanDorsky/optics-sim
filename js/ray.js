@@ -11,7 +11,7 @@ function Ray(_ctx, origin, theta) {
     this.debug.scale.y *= -1
     World.app.stage.addChild(this.debug)
 
-    this.maxSegs = 3
+    this.maxSegs = 5
 
     this.origin = origin
     this.theta = theta
@@ -39,34 +39,47 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsDrawn) {
     this.debugAddLine('    segsDrawn:'+segsDrawn)
 
     // this will only work if there's just one lens
-    for (var i = lenses.length - 1; i >= 0; i--) {
-        let lens = lenses[i]
-        let int_ret = this.intersects(segOrigin, segTheta, lens)
+    let ints = []
+    for (var i = lenses.length - 1; i >= 0; i--)
+        ints.push(this.intersects(segOrigin, segTheta, lenses[i]))
         // TODO: give line segment "medium" (material it's in)
-
-        if (int_ret) {
-            let int = int_ret[0]
-            // this.ctx.beginFill(0xff00ff)
-            // this.ctx.drawCircle(int.x, int.y, 5)
-            // this.ctx.endFill()
-
-            this.ctx.moveTo(segOrigin.x, segOrigin.y)
-            this.ctx.lineTo(int.x, int.y)
-            this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to ('+(int.x|0)+', '+(int.y|0)+')')
-
-            if (segsDrawn < this.maxSegs) {
-                this.drawSegment(int, int_ret[1], lenses, segsDrawn)
+    // find all intersections
+    // find the closest one
+    let xmin = -1
+    let int_ret = null
+    for (var i = ints.length - 1; i >= 0; i--) {
+        if (ints[i]) {
+            if (xmin == -1 || xmin > ints[i][2]) {
+                xmin = ints[i][2]
+                int_ret = ints[i]
             }
-        } else {
-            let endPoint = (new PIXI.Point(1, 0))
-                .rotate(segTheta)
-                .mult(1000)
-                .add(segOrigin)
-                
-            this.ctx.moveTo(segOrigin.x, segOrigin.y)
-            this.ctx.lineTo(endPoint.x, endPoint.y)
-            this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to (inf, inf)')
         }
+    }
+
+    if (int_ret) {
+        let int = int_ret[0]
+        // console.log('int')
+        // console.log(int)
+        // this.ctx.beginFill(0xff00ff)
+        // this.ctx.drawCircle(int.x, int.y, 5)
+        // this.ctx.endFill()
+
+        this.ctx.moveTo(segOrigin.x, segOrigin.y)
+        this.ctx.lineTo(int.x, int.y)
+        this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to ('+(int.x|0)+', '+(int.y|0)+')')
+
+        if (segsDrawn < this.maxSegs) {
+            this.drawSegment(int, int_ret[1], lenses, segsDrawn)
+        }
+    } else {
+        let endPoint = (new PIXI.Point(1, 0))
+            .rotate(segTheta)
+            .mult(1000)
+            .add(segOrigin)
+            
+        this.ctx.moveTo(segOrigin.x, segOrigin.y)
+        this.ctx.lineTo(endPoint.x, endPoint.y)
+        this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to (inf, inf)')
     }
 }
 
@@ -92,15 +105,20 @@ Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
         let int = null
         let corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
         let refraction_angle = (1 - 1/lens.n)*corner_angle
+        let x = -1
 
-        if (xs[0] > lens.epsilon)
+        if (xs[0] > lens.epsilon) {
             int = ints[0]
-        else if (xs[1] > lens.epsilon)
+            x = xs[0]
+        }
+        else if (xs[1] > lens.epsilon) {
             int = ints[1]
+            x = xs[1]
+        }
         else
             return null
 
-        return [int, refraction_angle+segTheta]
+        return [int, refraction_angle+segTheta, x, lens]
     } else {
         return null
     }

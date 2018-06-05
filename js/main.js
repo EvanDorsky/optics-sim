@@ -9,6 +9,7 @@ const World = {
         this.app.stage.addChild(this.ray_ctx)
 
         this.addLens(200, 200)
+        this.addLens(201, -250)
 
         this.app.stage.interactive = true
         this.app.stage.on("mousemove", (e) => {
@@ -40,9 +41,8 @@ const World = {
 }
 
 function addBeam() {
-    for (var y = -200; y > -500; y-=1) {
+    for (var y = -200; y > -450; y-=1)
         World.addRay(100, y, 0)
-    }
 }
 
 $(document).ready(() => {
