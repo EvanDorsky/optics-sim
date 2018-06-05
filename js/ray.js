@@ -23,11 +23,11 @@ Ray.prototype.draw = function(lenses) {
 }
 
 Ray.prototype.debugClear = function() {
-    this.debug.text = ""
+    // this.debug.text = ""
 }
 
 Ray.prototype.debugAddLine = function(line) {
-    this.debug.text += line+'\n'
+    // this.debug.text += line+'\n'
 }
 
 Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsDrawn) {
@@ -90,19 +90,15 @@ Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
         ]
 
         let int = null
-        if (xs[0] > lens.epsilon) {
+        let corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
+        let refraction_angle = (1 - 1/lens.n)*corner_angle
+
+        if (xs[0] > lens.epsilon)
             int = ints[0]
-            var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
-            var refraction_angle = (1 - 1/lens.n)*corner_angle
-        }
-        else if (xs[1] > lens.epsilon) {
+        else if (xs[1] > lens.epsilon)
             int = ints[1]
-            var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
-            var refraction_angle = (1 - 1/lens.n)*corner_angle
-        }
-        else {
+        else
             return null
-        }
 
         return [int, refraction_angle+segTheta]
     } else {

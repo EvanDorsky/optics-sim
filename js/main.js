@@ -1,5 +1,5 @@
 const World = {
-    app: new PIXI.Application(),
+    app: new PIXI.Application({antialias:true}),
     rays: [],
     lenses: [],
     init: function() {
@@ -24,7 +24,7 @@ const World = {
         this.drawRays()
     },
     drawRays: function() {
-        this.ray_ctx.clear().lineStyle(2, 0xffffff, 0.4)
+        this.ray_ctx.clear().lineStyle(2, 0xffffff, 0.2)
         for (var i = this.rays.length - 1; i >= 0; i--)
             this.rays[i].draw(this.lenses)
     },
@@ -39,15 +39,18 @@ const World = {
     }
 }
 
+function addBeam() {
+    for (var y = -200; y > -500; y-=1) {
+        World.addRay(100, y, 0)
+    }
+}
+
 $(document).ready(() => {
     document.body.appendChild(World.app.view)
 
     World.init()
 
-    // World.addRay(100, 100, 7.5*Math.PI/4)
-    World.addRay(100, -500, Math.PI/6)
-    // World.addRay(-100, 100, 7.5*Math.PI/4)
-    // World.addRay(-100, -100, 7.5*Math.PI/4)
+    addBeam()
 
     World.draw()
 })
