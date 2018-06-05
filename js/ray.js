@@ -1,23 +1,47 @@
 function Ray(_ctx, origin, theta) {
     this.ctx = _ctx
 
-    this.ctx.lineStyle(2, 0xffffff, 1)
+    this.debug = new PIXI.Text('Debug', {
+        fill: '#ffffff',
+        fontSize: 20
+    })
+    this.debug.x = 30
+    this.debug.y = -30
+    this.debug.pivot.y = 1
+    this.debug.scale.y *= -1
+    World.app.stage.addChild(this.debug)
+
+    this.maxSegs = 3
 
     this.origin = origin
     this.theta = theta
 }
 
 Ray.prototype.draw = function(lenses) {
-    this.drawSegment(this.origin, this.theta, lenses, 3, 0)
+    this.debugClear()
+    this.drawSegment(this.origin, this.theta, lenses, 0)
 }
 
-Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segsDrawn) {
+Ray.prototype.debugClear = function() {
+    this.debug.text = ""
+}
+
+Ray.prototype.debugAddLine = function(line) {
+    this.debug.text += line+'\n'
+}
+
+Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsDrawn) {
     // this.ctx.beginFill(0xff0000)
     // this.ctx.drawCircle(segOrigin.x, segOrigin.y, 5)
     // this.ctx.endFill()
+    segsDrawn++
+    this.debugAddLine('==== New segment ====')
+    this.debugAddLine('    segsDrawn:'+segsDrawn)
+
+    // this will only work if there's just one lens
     for (var i = lenses.length - 1; i >= 0; i--) {
         let lens = lenses[i]
-        let int_ret = this.intersects(segOrigin, segTheta, segsDrawn, lens)
+        let int_ret = this.intersects(segOrigin, segTheta, lens)
         // TODO: give line segment "medium" (material it's in)
 
         if (int_ret) {
@@ -28,11 +52,11 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segs
 
             this.ctx.moveTo(segOrigin.x, segOrigin.y)
             this.ctx.lineTo(int.x, int.y)
+            this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to ('+(int.x|0)+', '+(int.y|0)+')')
 
-            segsLeft--
-            segsDrawn++
-            if (segsLeft)
-                this.drawSegment(int, int_ret[1], lenses, segsLeft, segsDrawn)
+            if (segsDrawn < this.maxSegs) {
+                this.drawSegment(int, int_ret[1], lenses, segsDrawn)
+            }
         } else {
             let endPoint = (new PIXI.Point(1, 0))
                 .rotate(segTheta)
@@ -41,12 +65,13 @@ Ray.prototype.drawSegment = function(segOrigin, segTheta, lenses, segsLeft, segs
                 
             this.ctx.moveTo(segOrigin.x, segOrigin.y)
             this.ctx.lineTo(endPoint.x, endPoint.y)
+            this.debugAddLine('    -> Draw segment ('+(segOrigin.x|0)+', '+(segOrigin.y|0)+') to (inf, inf)')
         }
     }
 }
 
 // this checking breaks when the ray is inside the sphere
-Ray.prototype.intersects = function(segOrigin, segTheta, segNo, lens) {
+Ray.prototype.intersects = function(segOrigin, segTheta, lens) {
     let lens_pos = lens.ctx.position.as().add(segOrigin.as().mult(-1))
 
     let d = lens_pos.rotate(-segTheta).y
@@ -65,12 +90,12 @@ Ray.prototype.intersects = function(segOrigin, segTheta, segNo, lens) {
         ]
 
         let int = null
-        if (segNo == 0 && xs[0] > 0) {
+        if (xs[0] > lens.epsilon) {
             int = ints[0]
             var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
             var refraction_angle = (1 - 1/lens.n)*corner_angle
         }
-        else if (xs[1] > 0) {
+        else if (xs[1] > lens.epsilon) {
             int = ints[1]
             var corner_angle = Math.acos(chord_half/lens.r)*Math.sign(d)
             var refraction_angle = (1 - 1/lens.n)*corner_angle

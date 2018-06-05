@@ -8,6 +8,7 @@ function Lens(x, y) {
 
     this.ctx.beginFill(0xffffff)
     this.ctx.alpha = 0.2
+    this.epsilon = 0.1
 }
 
 Lens.prototype.draw = function() {
